@@ -1,6 +1,7 @@
 const API_URL = "";
 const options = {};
 
+// this interface its just an example
 interface ResponseObject {
   isFulfilled: boolean;
   dataToRender?: string;
