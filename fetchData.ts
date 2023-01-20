@@ -1,45 +1,64 @@
-const API_URL = "";
+const API_URL: URL = new URL("");
 const options = {};
+
+interface KeyValueParam {
+  paramKey: string;
+  paramValue: string;
+}
+
+const setURLParams = (KeyValueParams: Array<KeyValueParam>): void => {
+  KeyValueParams.forEach((KeyValueParam) => {
+    API_URL.searchParams.set(KeyValueParam.paramKey, KeyValueParam.paramValue);
+  });
+};
+
+// this interface can change over time and its no strictly the same as the api repsponse
+interface APIData {
+  name: string;
+}
 
 // this interface its just an example
 interface ResponseObject {
-  isFulfilled: boolean;
-  dataToRender?: string;
+  isOk: boolean;
+  text?: string;
+  data?: APIData;
 }
 
-const statusHandler = (res: Response): ResponseObject => {
-  let resObj = { isFulfilled: true };
-
-  // analyze possible codes...
-
-  //returns ResponseObject object to handle the status code.
-  return resObj;
-};
-
-const errorHandler = (err: Error | undefined): ResponseObject => {
-  console.log(err);
+const errorHandler = (err: Error): ResponseObject => {
   //returns ResponseObject object to handle error.
-  return { isFulfilled: false, dataToRender: "ERROR. Promise rejected" };
+  return { isOk: false, text: err.message };
 };
 
-// returns a JSX directly to render in DOM or a boolean to handle with other function
-const handleResponse = (obj: ResponseObject): JSX.Element => {
-  // analyze the resObj and returns data to render.
-};
-
-// getData has 3 possibles return objects
+// getData has 2 possibles return objects
 // 1st: the request is fulfilled and we have the res.json() object.
-// 2nd: the request is fulfilled but we have an res.ok = false. So statusHandler returns an object.
-// 3rd: the request is rejected so errorHandler returns an objecto
+// 2nd: the request is fulfilled but we have an res.ok = false so an error is thrown
+// or the promise is rejected.
+// In both cases the control is passed to errorHandler in catch, that returns an object
+// of ReposnseObject type
 const getData = (): Promise<ResponseObject> => {
   return fetch(API_URL, options)
-    .then((res: Response) => {
-      if (!res.ok) {
-        return statusHandler(res);
-      }
+    .then((res: Response): Promise<APIData> | never => {
+      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
       return res.json();
     })
+    .then((data) => {
+      return {
+        isOk: true,
+        data,
+      };
+    })
     .catch(errorHandler);
+};
+
+// returns a JSX directly to render in DOM
+const handleResponse = (obj: ResponseObject): JSX.Element => {
+  // analyze the resObj and returns data to render.
+
+  if (obj.isOk) {
+    // Do something...
+  } else {
+    // Do other...
+  }
 };
 
 // inside component
