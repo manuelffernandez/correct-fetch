@@ -1,28 +1,19 @@
+import { KeyValueParam, ResponseObject, APIResource } from "../interfaces";
+
+// the base URL to fetch resources. This value is usually stored in an environment var
 const API_URL: URL = new URL("");
+
+// options to set in fetch
 const options = {};
 
-interface KeyValueParam {
-  paramKey: string;
-  paramValue: string;
-}
+// this value can change depending on the differents request that the user made
+let queryParams = [];
 
 const setURLParams = (KeyValueParams: Array<KeyValueParam>): void => {
   KeyValueParams.forEach((KeyValueParam) => {
     API_URL.searchParams.set(KeyValueParam.paramKey, KeyValueParam.paramValue);
   });
 };
-
-// this interface can change over time and its no strictly the same as the api repsponse
-interface APIData {
-  name: string;
-}
-
-// this interface its just an example
-interface ResponseObject {
-  isOk: boolean;
-  text?: string;
-  data?: APIData;
-}
 
 const errorHandler = (err: Error): ResponseObject => {
   //returns ResponseObject object to handle error.
@@ -35,9 +26,10 @@ const errorHandler = (err: Error): ResponseObject => {
 // or the promise is rejected.
 // In both cases the control is passed to errorHandler in catch, that returns an object
 // of ReposnseObject type
-const getData = (): Promise<ResponseObject> => {
+export const getData = (): Promise<ResponseObject> => {
+  setURLParams(queryParams);
   return fetch(API_URL, options)
-    .then((res: Response): Promise<APIData> | never => {
+    .then((res: Response): Promise<APIResource> | never => {
       if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
       return res.json();
     })
@@ -49,19 +41,3 @@ const getData = (): Promise<ResponseObject> => {
     })
     .catch(errorHandler);
 };
-
-// returns a JSX directly to render in DOM
-const handleResponse = (obj: ResponseObject): JSX.Element => {
-  // analyze the resObj and returns data to render.
-
-  if (obj.isOk) {
-    // Do something...
-  } else {
-    // Do other...
-  }
-};
-
-// inside component
-getData().then((res) => {
-  handleResponse(res);
-});
