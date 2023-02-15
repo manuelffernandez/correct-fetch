@@ -1,3 +1,8 @@
-import { KeyValueParam, APIResource, ResponseObject } from "./services";
+import {
+  KeyValueParam,
+  ResponseObject,
+  ResourceDataOne,
+  ResourceDataTwo,
+} from "./services";
 
-export type { KeyValueParam, APIResource, ResponseObject };
+export type { KeyValueParam, ResponseObject, ResourceDataOne, ResourceDataTwo };
