@@ -12,7 +12,7 @@ It's done in TypeScript and I update it regularly, so the last commit of the mai
 Feel free to download or fork it, and don't hesitate to write me if you have any questions or suggestions.
 
 ## Last update :arrows_counterclockwise:
-02/14/2023 - commit hash: [41240d8](https://github.com/manuelffernandez/correct-fetch/commit/41240d86937d66733adb794f52aef2af8ec4b565)
+02/14/2023 - commit hash: [92ddf68](https://github.com/manuelffernandez/correct-fetch/commit/92ddf684d7e284f3d90456d8e9e8df05c286af4e)
 
 ## Contact me :email:
 
